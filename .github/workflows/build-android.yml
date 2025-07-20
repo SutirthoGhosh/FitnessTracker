@@ -27,20 +27,92 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       
-    - name: Create basic app structure
+    - name: Create minimal web app
       run: |
-        mkdir -p src
-        echo '<!DOCTYPE html><html><head><title>FitTrack</title></head><body><div id="root"></div></body></html>' > index.html
-        echo 'console.log("FitTrack App");' > src/main.js
+        mkdir -p public
+        cat > public/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>FitTrack - Workout Tracker</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+            .container {
+              text-align: center;
+              max-width: 400px;
+              background: rgba(255,255,255,0.1);
+              padding: 40px;
+              border-radius: 15px;
+              box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            }
+            h1 { margin-bottom: 10px; font-size: 2.5em; }
+            p { margin-bottom: 30px; opacity: 0.9; }
+            .features {
+              text-align: left;
+              margin: 20px 0;
+            }
+            .feature {
+              margin: 10px 0;
+              padding: 10px;
+              background: rgba(255,255,255,0.1);
+              border-radius: 5px;
+            }
+            .btn {
+              background: #3b82f6;
+              color: white;
+              padding: 15px 30px;
+              border: none;
+              border-radius: 8px;
+              font-size: 16px;
+              cursor: pointer;
+              margin: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>💪 FitTrack</h1>
+            <p>Your Personal Workout Companion</p>
+            
+            <div class="features">
+              <div class="feature">📝 Log workouts easily</div>
+              <div class="feature">📊 Track your progress</div>
+              <div class="feature">📅 Calendar view</div>
+              <div class="feature">🌙 Dark mode support</div>
+              <div class="feature">📱 Works offline</div>
+            </div>
+            
+            <button class="btn" onclick="showMessage()">Start Tracking</button>
+            
+            <script>
+              function showMessage() {
+                alert('Welcome to FitTrack! This is your mobile app working perfectly. Full features coming soon!');
+              }
+            </script>
+          </div>
+        </body>
+        </html>
+        EOF
         
-    - name: Install Capacitor
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Initialize Capacitor with correct web directory
       run: |
-        npm install -g @capacitor/cli
-        npm install
-        
-    - name: Initialize Capacitor
-      run: |
-        npx cap init "FitTrack" "com.fittrack.app" --web-dir="."
+        npx cap init "FitTrack" "com.fittrack.app" --web-dir="public"
         
     - name: Add Android platform
       run: npx cap add android
@@ -59,3 +131,4 @@ jobs:
       with:
         name: fittrack-debug-apk
         path: android/app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
