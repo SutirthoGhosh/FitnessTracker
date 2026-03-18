@@ -1,0 +1,1 @@
+{\n  "build": {\n    "env": {\n      "NODE_ENV": "production"\n    },\n    "commands": {\n      "build": "npm run build"\n    },\n    "outputDirectory": "dist/public"\n  }\n}
